@@ -16,7 +16,13 @@ public class vote {
             this.lastname = lastname;
         }
         
+        public String getFirstName(){
+            return firstname;
+        }
 
+        public String getLastName(){
+            return lastname;
+        }
         
 
         
