@@ -25,10 +25,10 @@ public class vote {
         }
         
 
+        public String toString(){
+            return firstname + '-' + lastname;
+        }
         
-        
-
-
     }
 
     public static void main(String[] args) {
