@@ -11,7 +11,20 @@ class Vote {
         this.date = date;
     }
 
+    public Person getVoter() {
+        return voter;
+    }
 
+    public String getDate() {
+        return date;
+    }
+
+    @Override
+    public String toString() {
+        return "" + voter + "-" + date ;
+    }
+
+    
 
 
 }
@@ -37,7 +50,7 @@ class Person {
     
 
     public String toString(){
-        return firstname + '-' + lastname;
+        return firstname + "-" + lastname;
     }
     
 }
