@@ -58,12 +58,6 @@ class Voting {
             choices.get(choice).add(vote);
         }
     }
-
-    
-
-
-    
-
 }
 
 
@@ -96,13 +90,17 @@ class Vote {
         if ( this == o) return true;
         if ( !(o instanceof VotingSystem)) return false;
         VotingSystem that = (VotingSystem) o;
-        return Objects.equals(getVotingList(), that.getVotingList());
+
+        return Objects.equals(getVotingList(),that.getVotingList());
+       
+        
 
     }
 
     @Override
     public int hashCode(){
         return Objects.hash(getVotingList());
+        
     }
 
 }
@@ -133,9 +131,65 @@ class Person {
     
 }
 
+class VotingSystem{
+
+    private ArrayList<Voting> votingList;
+
+    public VotingSystem(ArrayList<Voting> votingList) {
+        this.votingList = votingList;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((votingList == null) ? 0 : votingList.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        VotingSystem other = (VotingSystem) obj;
+        if (votingList == null) {
+            if (other.votingList != null)
+                return false;
+        } else if (!votingList.equals(other.votingList))
+            return false;
+        return true;
+    }
+
+    public void createVoting(String question,boolean isAnonymous,int type,ArrayList<String> choices){
+        Voting voting = new Voting(type,question,isAnonymous);
+        for (String choice : choices) {
+            voting.createChoice(choice);
+        }
+        votingList.add(voting);
+
+    }
+
+    public ArrayList<Voting> getVotingList() {
+
+        return votingList;
+
+    }
+
+    public void printResults(int index){
+    
+    }
+
+}
+
 public class vote {
     public static void main(String[] args) {
-        
-        
+    
+        VotingSystem test = new VotingSystem(new ArrayList<>());
+        Vote vote = new Vote(new Person("ali","mohammadi"),"some date");
+        System.out.println(vote);
     }
 }
