@@ -1,195 +1,132 @@
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Objects;
+import java.util.Scanner;
 
 
-class Voting {
 
-    private int type;
-    private String question;
-    private HashMap<String, HashSet<Vote>> choices;
-    private boolean isAnonymous;
-    private ArrayList<Person> voters;
 
-    
-    public String getQuestion() {
-        return question;
-    }
 
-    public ArrayList<String> getChoices() {
-        return new ArrayList<>(choices.keySet());
-    }
+public class VotingSystem {
+    ArrayList <Voting> votingList = new ArrayList<>();
+    Scanner input = new Scanner(System.in);
 
-    public Voting(int type, String question, boolean isAnonymous) {
-        this.type = type;
-        this.question = question;
-        this.isAnonymous = isAnonymous;
-        choices = new HashMap<>();
-        voters = new ArrayList<>();
-    }
-
-    public void setQuestion(String question) {
-        this.question = question;
-    }
-
-    public void createChoice(String choice) {
-        choices.put(choice, new HashSet<>());
-    }
-
-    public void vote(Person voter, ArrayList<String> voter_choices){
-        if (type == 0) {
-            System.out.println("You can only select one choice for this voting.");
-        }
-        if (!voters.contains(voter)) {
-            voters.add(voter);
-        }
-        for (String choice : voter_choices) {
-            if (!choices.containsKey(choice)) {
-                System.out.println("Invalid choice: " + choice);
+    public void createVoting(){
+        System.out.println("please type your question :");
+        String question = input.nextLine();
+        boolean anonymous;
+        while (true){
+            System.out.println("do you want the vote to be anonymous :\n1.yes\t2.no");
+            String temp = input.nextLine();
+            if(temp.equals("yes") || temp.equals("1")){
+                anonymous = true;
+                break;
             }
-
-            Vote vote = new Vote(voter, "");
-
-            if (!isAnonymous) {
-                vote = new Vote(voter, "some date");
+            else if(temp.equals("no") || temp.equals("2")){
+                anonymous = false;
+                break;
             }
-
-            choices.get(choice).add(vote);
+            else {
+                System.out.println("invalid input!");
+            }
         }
-    }
-}
-
-
-class Vote {
-
-    private final Person voter;
-    private final String date;
-
-    public Vote (Person voter,String date){
-        this.voter = voter;
-        this.date = date;
-    }
-
-    public Person getVoter() {
-        return voter;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    @Override
-    public String toString() {
-        return "" + voter + "-" + date ;
-    }
-
-    @Override
-    public boolean equals(Object o){
-
-        if ( this == o) return true;
-        if ( !(o instanceof VotingSystem)) return false;
-        VotingSystem that = (VotingSystem) o;
-
-        return Objects.equals(getVotingList(),that.getVotingList());
-       
-        
-
-    }
-
-    @Override
-    public int hashCode(){
-        return Objects.hash(getVotingList());
-        
-    }
-
-}
-
-class Person {
-
-    private String firstname;
-    private String lastname;
-    
-    
-    public Person(String firstname,String lastname){
-        this.firstname = firstname;
-        this.lastname = lastname;
-    }
-    
-    public String getFirstName(){
-        return firstname;
-    }
-
-    public String getLastName(){
-        return lastname;
-    }
-    
-
-    public String toString(){
-        return firstname + "-" + lastname;
-    }
-    
-}
-
-class VotingSystem{
-
-    private ArrayList<Voting> votingList;
-
-    public VotingSystem(ArrayList<Voting> votingList) {
-        this.votingList = votingList;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((votingList == null) ? 0 : votingList.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        VotingSystem other = (VotingSystem) obj;
-        if (votingList == null) {
-            if (other.votingList != null)
-                return false;
-        } else if (!votingList.equals(other.votingList))
-            return false;
-        return true;
-    }
-
-    public void createVoting(String question,boolean isAnonymous,int type,ArrayList<String> choices){
-        Voting voting = new Voting(type,question,isAnonymous);
-        for (String choice : choices) {
-            voting.createChoice(choice);
+        boolean multiChoice;
+        while (true){
+            System.out.println("do you want the vote to be multiChoice :\n1.yes\t2.no");
+            String temp = input.nextLine();
+            if(temp.equals("yes") || temp.equals("1")){
+                multiChoice = true;
+                break;
+            }
+            else if(temp.equals("no") || temp.equals("2")){
+                multiChoice = false;
+                break;
+            }
+            else {
+                System.out.println("invalid input!");
+            }
         }
+        ArrayList <String> choices = new ArrayList<>();
+        System.out.println("please type your choices and when you're done type \"DONE!\" :");
+        while (true){
+            String choice = input.nextLine();
+            if(choice.equals("DONE!")){
+                break;
+            }
+            choices.add(choice);
+        }
+        System.out.println("voting successfully created.");
+
+        Voting voting = new Voting(question , multiChoice , anonymous);
+        voting.createChoices(choices);
         votingList.add(voting);
+    }
+
+    public boolean showQuestions(){
+        if(votingList.size() == 0){
+            System.out.println("there is no voting!");
+            return false;
+        }
+        else {
+            for (int i = 0; i <votingList.size() ; i++) {
+                System.out.println((i+1) + ". " + votingList.get(i).getQuestion());
+            }
+            return true;
+        }
+    }
+
+
+    public void vote(String firstname , String lastname){
+        if(showQuestions()){
+            int questionNumber = Integer.parseInt(input.nextLine());
+            questionNumber--;
+            System.out.println("------------------------------");
+            Voting voting = votingList.get(questionNumber);
+            ArrayList<String> questionChoices = voting.getChoices();
+            System.out.println(voting.getQuestion());
+            if(voting.isMultiChoice()){
+                for (int i = 0; i < questionChoices.size(); i++) {
+                    System.out.println((i+1) + ". " + questionChoices.get(i));
+                }
+                System.out.println("this is a multi choice question enter your choices and then type\"DONE!\"");
+                String temp;
+                ArrayList<String> givenChoices = new ArrayList<>();
+                while (true){
+                    temp = input.nextLine();
+                    if(temp.equals("DONE!")){
+                        break;
+                    }
+                    else{
+                        int index = Integer.parseInt(temp) -1 ;
+                        givenChoices.add(questionChoices.get(index));
+                    }
+                }
+                voting.vote(firstname , lastname , givenChoices);
+            }
+            else {
+                for (int i = 0; i < questionChoices.size(); i++) {
+                    System.out.println((i+1) + ". " + questionChoices.get(i));
+                }
+                ArrayList<String> givenChoices = new ArrayList<>();
+                int index = Integer.parseInt(input.nextLine()) -1;
+                givenChoices.add(questionChoices.get(index));
+                voting.vote(firstname , lastname , givenChoices);
+            }
+        }
+    }
+
+    public void printResult(){
+        if(showQuestions()) {
+            int questionNumber = Integer.parseInt(input.nextLine());
+            questionNumber--;
+            System.out.println("------------------------------");
+            Voting voting = votingList.get(questionNumber);
+            if(voting.isAnonymous()){
+                voting.printAnonymous();
+            }
+            else{
+                voting.printNonAnonymous();
+            }
+        }
 
     }
 
-    public ArrayList<Voting> getVotingList() {
-
-        return votingList;
-
-    }
-
-    public void printResults(int index){
-    
-    }
-
-}
-
-public class vote {
-    public static void main(String[] args) {
-    
-        VotingSystem test = new VotingSystem(new ArrayList<>());
-        Vote vote = new Vote(new Person("ali","mohammadi"),"some date");
-        System.out.println(vote);
-    }
 }
