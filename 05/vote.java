@@ -2,6 +2,80 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+
+public class Voting {
+    private String question;
+    private HashMap <String, HashSet<Vote>> choices;
+    private boolean multiChoice;
+    private boolean isAnonymous;
+    private ArrayList <Person> voters = new ArrayList<>();
+
+    public Voting(String question, boolean multiChoice, boolean isAnonymous) {
+        this.question = question;
+        this.multiChoice = multiChoice;
+        this.isAnonymous = isAnonymous;
+    }
+
+    public void createChoices(ArrayList<String> givenChoices){
+        choices = new HashMap<>();
+        for (String givenChoice : givenChoices) {
+            choices.put(givenChoice, new HashSet<>());
+        }
+    }
+
+    public String getQuestion() {
+        return question;
+    }
+
+    public ArrayList<String> getChoices(){
+        ArrayList<String> choices = new ArrayList<>(this.choices.keySet());
+        return choices;
+    }
+
+    public boolean isMultiChoice() {
+        return multiChoice;
+    }
+
+    public void vote(String firstName , String lastName , ArrayList<String> choices){
+        Person person = new Person(firstName , lastName);
+        voters.add(person);
+        for (String choice : choices) {
+            HashSet<Vote> votes = this.choices.get(choice);
+            Date date = new Date();
+            votes.add(new Vote(person, date.toString()));
+            this.choices.put(choice, votes);
+        }
+    }
+
+    public boolean isAnonymous() {
+        return isAnonymous;
+    }
+
+    public void printAnonymous(){
+        System.out.println(question);
+        for (String str:choices.keySet()) {
+            System.out.println("\t" + str + " : " + choices.get(str).size());
+        }
+    }
+
+    public void printNonAnonymous(){
+        System.out.println(question);
+        for (String str: choices.keySet()) {
+            System.out.println(str + " : {" );
+            for (Vote vote : choices.get(str)) {
+                System.out.println(vote.getVoter());
+            }
+            if(choices.get(str).size() == 0){
+                System.out.println("No voters");
+            }
+            System.out.println("}");
+        }
+    }
+}
 
 
 
