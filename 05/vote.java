@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class Voting {
+class Voting {
     private String question;
     private HashMap <String, HashSet<Vote>> choices;
     private boolean multiChoice;
@@ -79,7 +79,7 @@ public class Voting {
 
 
 
-public class VotingSystem {
+class VotingSystem {
     ArrayList <Voting> votingList = new ArrayList<>();
     Scanner input = new Scanner(System.in);
 
@@ -203,4 +203,50 @@ public class VotingSystem {
 
     }
 
+}
+
+//KOMAK!
+
+public class vote{
+
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        VotingSystem votingSystem = new VotingSystem();
+
+        label:
+        while (true){
+            printMenu();
+            String temp = input.nextLine();
+            switch (temp) {
+                case "1":
+                    votingSystem.createVoting();
+                    break;
+                case "2":
+                    System.out.println("enter your name :");
+                    String name = input.nextLine();
+                    System.out.println("enter your last name :");
+                    String lastName = input.nextLine();
+                    votingSystem.vote(name, lastName);
+                    break;
+                case "3":
+                    System.out.println("enter your question number:");
+                    votingSystem.printResult();
+                    break;
+                case "4":
+                    break label;
+                default:
+                    System.out.println("invalid input!");
+                    break;
+            }
+            System.out.println("-----------------------------");
+        }
+    }
+
+    public static void printMenu(){
+        System.out.println("please choose one of indexes : ");
+        System.out.println("1. create a question");
+        System.out.println("2. vote to an existing question");
+        System.out.println("3. print results");
+        System.out.println("4. exit");
+    }
 }
