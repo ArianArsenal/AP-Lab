@@ -7,7 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 
 
-public class HelloController {
+public class Controller {
     @FXML
     private TextField textField;
 
